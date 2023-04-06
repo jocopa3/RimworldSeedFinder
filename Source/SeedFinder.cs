@@ -1147,7 +1147,7 @@ public class SeedFinderController : ModBase {
                 continue;
             }
 
-            if (tile.biome != filterParams.biome || tile.hilliness != filterParams.hilliness) {
+            if (tile.biome != filterParams.biome || tile.hilliness < filterParams.hilliness) {
                 continue;
             }
 
