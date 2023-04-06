@@ -57,6 +57,8 @@ class SeedFinderFilterParameters {
     public Hemisphere hemisphere;
     public int maxTemp;
     public int minTemp;
+    public int minRainfall;
+    public int maxRainfall;
     public int minGrowingDays;
     public Seasonality seasonality;
     public int minGeysers;
@@ -379,6 +381,18 @@ class FilterWindow : Verse.Window
 
         curY += skipSize;
 
+        // Min Rainfall
+        Widgets.Label(new Rect(0, curY, buttonOffset, labelSize), "Min Allowed Rainfall: ");
+        string minRainfallStr = filterParams.minRainfall.ToString();
+        Widgets.TextFieldNumeric(new Rect(buttonOffset, curY, buttonSize.x, buttonSize.y), ref filterParams.minRainfall, ref minRainfallStr, 0f, 10000f);
+
+        // Max Rainfall
+        Widgets.Label(new Rect(rightOffset, curY, buttonOffset, labelSize), "Max Allowed Rainfall: ");
+        string maxRainfallStr = filterParams.maxRainfall.ToString();
+        Widgets.TextFieldNumeric(new Rect(rightOffset + buttonOffset, curY, buttonSize.x, buttonSize.y), ref filterParams.maxRainfall, ref maxRainfallStr, 0f, 10000f);
+
+        curY += skipSize;
+
         Widgets.Label(new Rect(0, curY, buttonOffset, labelSize), "Min Geysers: ");
         string geysersTempStr = filterParams.minGeysers.ToString();
         Widgets.TextFieldNumeric(new Rect(buttonOffset, curY, buttonSize.x, buttonSize.y), ref filterParams.minGeysers, ref geysersTempStr, 0, 10);
@@ -652,6 +666,8 @@ public class SeedFinderController : ModBase {
 
         filterParams.maxTemp = 200;
         filterParams.minTemp = -200;
+        filterParams.maxRainfall = 10000;
+        filterParams.minRainfall = 0;
         filterParams.minGrowingDays = 0;
         filterParams.seasonality = Seasonality.Any;
         filterParams.minGeysers = 0;
@@ -1188,6 +1204,12 @@ public class SeedFinderController : ModBase {
                                                      Prefs.TemperatureMode);
 
             if (maxTemp > (float)filterParams.maxTemp || minTemp < (float)filterParams.minTemp) {
+                continue;
+            }
+
+            float rainfall = tile.rainfall;
+
+            if (rainfall > (float)filterParams.maxRainfall || rainfall < (float)filterParams.minRainfall) {
                 continue;
             }
 
